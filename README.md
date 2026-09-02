@@ -67,6 +67,11 @@ Then open <http://127.0.0.1:5500>.
 Opening `index.html` directly over `file://` works too, though a local server matches
 production more closely.
 
+## Related repositories
+
+- [enterprise-network-design](https://github.com/moh-hajj/enterprise-network-design) — three-site, 76-user enterprise network design and implementation
+- [windows-server-ad-lab](https://github.com/moh-hajj/windows-server-ad-lab) — multi-DC Active Directory, backup, VPN and Server Core lab
+
 ## Licence
 
 Code is free to reference. Content, images and CV are © Moh Hajjar — please don't reuse

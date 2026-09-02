@@ -2,7 +2,7 @@
     "use strict";
 
     // Scrolling
-    const navLinks = document.querySelectorAll('.nav-menu a, .back-to-top');
+    const navLinks = document.querySelectorAll('.nav-menu a, .footer-col a, .back-to-top');
     const sections = document.querySelectorAll('main section');
     const header = document.querySelector('.header');
     const headerHeight = header ? header.offsetHeight : 0;
@@ -50,16 +50,13 @@
 
     const toggleMobileNav = () => {
         document.body.classList.toggle('mobile-nav-active');
-        const icon = mobileNavToggle.querySelector('i');
-        if (document.body.classList.contains('mobile-nav-active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-times');
-            mobileOverlay.style.display = 'block';
-        } else {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-            mobileOverlay.style.display = 'none';
+        const iconRef = mobileNavToggle.querySelector('use');
+        const isOpen = document.body.classList.contains('mobile-nav-active');
+        if (iconRef) {
+            iconRef.setAttribute('href', isOpen ? '#i-times' : '#i-bars');
         }
+        mobileOverlay.style.display = isOpen ? 'block' : 'none';
+        mobileNavToggle.setAttribute('aria-expanded', String(isOpen));
     };
 
     if (mobileNavToggle) {
@@ -67,6 +64,14 @@
     }
 
     mobileOverlay.addEventListener('click', toggleMobileNav);
+
+    // Escape closes the mobile nav and puts focus back on the toggle
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && document.body.classList.contains('mobile-nav-active')) {
+            toggleMobileNav();
+            mobileNavToggle.focus();
+        }
+    });
 
     // Back to Top
     const backToTop = document.querySelector('.back-to-top');
@@ -105,5 +110,55 @@
 
     window.addEventListener('scroll', updateActiveMenu);
     window.addEventListener('load', updateActiveMenu);
+
+    // Project Modals
+    const projectModals = document.querySelectorAll('.project-modal');
+
+    const openModal = (trigger) => {
+        const modal = document.getElementById(trigger.getAttribute('data-modal'));
+        if (!modal || modal.open) {
+            return;
+        }
+        if (typeof modal.showModal === 'function') {
+            modal.showModal();
+            document.body.classList.add('modal-open');
+        } else {
+            modal.setAttribute('open', '');
+        }
+    };
+
+    // The <button> is the real control, so Enter and Space are handled natively.
+    document.querySelectorAll('[data-modal]').forEach(trigger => {
+        trigger.addEventListener('click', function () {
+            openModal(this);
+        });
+    });
+
+    // Clicking anywhere else on the card forwards to that card's button.
+    document.querySelectorAll('.project-card.expandable').forEach(card => {
+        const trigger = card.querySelector('[data-modal]');
+        if (!trigger) {
+            return;
+        }
+        card.addEventListener('click', event => {
+            if (!trigger.contains(event.target) && window.getSelection().isCollapsed) {
+                openModal(trigger);
+            }
+        });
+    });
+
+    projectModals.forEach(modal => {
+        // Clicking the backdrop targets the dialog itself
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                modal.close();
+            }
+        });
+
+        // Also covers closing via Escape or the close button
+        modal.addEventListener('close', function () {
+            document.body.classList.remove('modal-open');
+        });
+    });
 
 })();

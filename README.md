@@ -1,4 +1,4 @@
-# Portfolio — [mohamadhajjar.com](https://mohamadhajjar.com)
+# Portfolio — [mohhajjar.com](https://mohhajjar.com)
 
 Personal portfolio site for Moh Hajjar — networks, systems and Odoo ERP work.
 
